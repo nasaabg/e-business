@@ -22,3 +22,5 @@ RUN \
 
 # Define working directory
 WORKDIR /app
+ADD . /app
+CMD sbt run
