@@ -4,6 +4,6 @@ import play.api.libs.json._
 
 case class ProductKeyWord(id: Long, product: Int, keyWord: Int)
 
-object KeyWord {
+object ProductKeyWord {
   implicit val productKeyWordFormat = Json.format[ProductKeyWord]
 }

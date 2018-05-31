@@ -14,7 +14,7 @@ import scala.concurrent.{ Future, ExecutionContext }
 @Singleton
 class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, categoryRepository: CategoryRepository)(implicit ec: ExecutionContext) {
   // We want the JdbcProfile for this provider
-  private val dbConfig = dbConfigProvider.get[JdbcProfile]
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   // These imports are important, the first one brings db into scope, which will let you do the actual db operations.
   // The second one brings the Slick DSL into scope, which lets you define the table and other queries.
@@ -26,7 +26,7 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, cat
    */
   import categoryRepository.CategoryTable
 
-  private class ProductTable(tag: Tag) extends Table[Product](tag, "product") {
+  class ProductTable(tag: Tag) extends Table[Product](tag, "product") {
 
     /** The ID column, which is the primary key, and auto incremented */
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
@@ -40,6 +40,10 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, cat
     def category = column[Int]("category")
 
     def category_fk = foreignKey("cat_fk",category, cat)(_.id)
+
+    def keyWord = column[Int]("category")
+    def category_fk = foreignKey("cat_fk",category, cat)(_.id)
+
     /**
      * This is the tables default "projection".
      *
@@ -48,7 +52,7 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, cat
      * In this case, we are simply passing the id, name and page parameters to the Person case classes
      * apply and unapply methods.
      */
-    def * = (id, name, description, category) <> ((Product.apply _).tupled, Product.unapply)
+    def * = (id, name, description, category, keyWord) <> ((Product.apply _).tupled, Product.unapply)
     //def * = (id, name) <> ((Category.apply _).tupled, Category.unapply)
   }
 

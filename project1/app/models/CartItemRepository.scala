@@ -1,48 +1,47 @@
 package models
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
- * A repository for people.
- *
- * @param dbConfigProvider The Play db config provider. Play will inject this for you.
- */
+  * A repository for people.
+  *
+  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
+  */
 @Singleton
-class CartRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
-  // We want the JdbcProfile for this provider
-  private val dbConfig = dbConfigProvider.get[JdbcProfile]
-
-  // These imports are important, the first one brings db into scope, which will let you do the actual db operations.
-  // The second one brings the Slick DSL into scope, which lets you define the table and other queries.
+class CartItemRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, cartRepository: CartRepository, productRepository: ProductRepository)(implicit ec: ExecutionContext) {
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
   import dbConfig._
   import profile.api._
 
-  /**
-   * Here we define the table. It will have a name of people
-   */
+  import cartRepository.CartTable
 
-  private class CartTable(tag: Tag) extends Table[Cart](tag, "cart") {
+  private val cart_id = TableQuery[CartTable]
 
-    /** The ID column, which is the primary key, and auto incremented */
-    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def * = (id) <> ((Cart.apply _).tupled, Cart.unapply)
-    //def * = (id, name) <> ((Category.apply _).tupled, Category.unapply)
+  import productRepository.ProductTable
+
+  private val product_id = TableQuery[ProductTable]
+
+  private class CartItemTable(tag: Tag) extends Table[CartItem](tag, "basket_content") {
+
+    def id = column[Long]("id", O.PrimaryKey)
+    def quantity = column[Int]("quantity")
+    def product = column[Long]("product")
+    def cart_foreign_key = foreignKey("cart_foreign_key", id, cart_id)(_.id)
+    def product_foreign_key = foreignKey("product_foreign_key", product, product_id)(_.id)
+    def * = (quantity, id, product) <> ((CartItem.apply _).tupled, CartItem.unapply)
   }
 
-  /**
-   * The starting point for all queries on the people table.
-   */
-  private val cart = TableQuery[CartTable]
+  private val cartItem = TableQuery[CartItemTable]
 
-  /**
-   * List all the people in the database.
-   */
-  def list(): Future[Seq[Cart]] = db.run {
-    cart.result
+
+  def create(cart: Long, product: Long, amount: Int): Future[Int] =
+    db.run(cartItem += CartItem(amount, cart, product))
+
+  def list(): Future[Seq[CartItem]] = db.run {
+    cartItem.result
   }
 }

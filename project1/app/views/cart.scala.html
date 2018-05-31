@@ -1,0 +1,19 @@
+@(basket: Form[CreateCartForm])(implicit request: MessagesRequestHeader)
+
+@import helper._
+
+@request.flash.get("success").map { key =>
+	@request.messages(key)
+}
+
+@main("Welcome to Ebiznes") {
+	@form(routes.CartController.addBasketId()) {
+		@inputText(basket("user"))
+
+		@CSRF.formField
+
+		<div class="buttons">
+			<input type="submit" value="Add basket id"/>
+		</div>
+	}
+}
