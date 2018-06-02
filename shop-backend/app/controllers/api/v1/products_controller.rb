@@ -5,7 +5,12 @@ module Api
 
       # GET /products
       def index
-        @products = Product.all
+        @products =
+          if params[:category_id]
+            Product.where(category_id: params[:category_id])
+          else
+            Product.all
+          end
 
         render json: @products
       end
