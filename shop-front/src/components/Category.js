@@ -9,12 +9,12 @@ class Category extends React.Component {
 
   render () {
     const {category, selected} = this.props
-    let className = 'list-group-item';
+    let className = 'list-group-item list-group-item-action';
     if (selected) {
       className += ' active';
     }
     return(
-      <div role='button' className={className} key={category.id} onClick={(e) => this.handleClick(e)}>
+      <div className={className} key={category.id} onClick={(e) => this.handleClick(e)}>
         <h4>{category.name}</h4>
       </div>
     )

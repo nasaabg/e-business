@@ -12,7 +12,6 @@ class CategoriesContainer extends Component {
   componentDidMount() {
     axios.get("http://localhost:3001/api/v1/categories.json")
       .then(response => {
-        console.log(response)
         this.setState({
           categories: response.data
         })
@@ -21,7 +20,7 @@ class CategoriesContainer extends Component {
   }
 
   render() {
-    const {selectedCatgoryID} = this.props
+    const {selectedCategoryID} = this.props
     return (
       <div className="list-group">
         {this.state.categories.map(category => {
@@ -29,7 +28,7 @@ class CategoriesContainer extends Component {
             <Category
               category={category}
               key={category.id}
-              selected={category.id == selectedCatgoryID}
+              selected={category.id === selectedCategoryID}
               onSelect={this.props.onCategorySelect}
             />
           )

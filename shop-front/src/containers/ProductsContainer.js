@@ -10,22 +10,43 @@ class ProductsContainer extends Component {
     }
   }
 
-  componentDidMount () {
-    axios.get('http://localhost:3001/api/v1/products.json')
+  fetchProducts() {
+    const {selectedCategoryID} = this.props
+    axios.get('http://localhost:3001/api/v1/products.json', {
+      params: {
+        category_id: selectedCategoryID
+      }
+    })
       .then(response => {
-        console.log(response)
         this.setState({
-          products: response.data
+          products: response.data,
+          currentCategoryID: selectedCategoryID
         })
       })
       .catch(error => console.log(error))
   }
 
+  componentDidMount () {
+    this.fetchProducts()
+  }
+
+  componentDidUpdate (prevProps, prevState, snapshot) {
+    const {currentCategoryID} = prevState
+    const {selectedCategoryID} = this.props
+
+    if (currentCategoryID !== selectedCategoryID){
+      this.fetchProducts()
+    }
+  }
+
+
   render () {
+    const {onProductAdd} = this.props
+
     return (
       <div className="row">
         {this.state.products.map(product => {
-          return (<Product product={product} key={product.id}/>)
+          return (<Product addProduct={onProductAdd} product={product} key={product.id}/>)
         })}
       </div>
     )
