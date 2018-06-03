@@ -5,12 +5,11 @@ class AuthenticationController < ApplicationController
 
     login = user_info[:login]
     name = user_info[:name]
-    avatar_url = user_info[:avatar_url]
 
     token = TokiToki.encode(login)
     User.where(login: login).first_or_create!(
         name: name,
-        avatar_url: avatar_url
+        login: login
     )
     redirect_to "#{issuer}?token=#{token}"
   rescue StandardError => error
