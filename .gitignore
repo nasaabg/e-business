@@ -1,3 +1,4 @@
-project1/.idea/
-project1/.gradle/
+.idea/
+.gradle/
+.env
 project1/target/
