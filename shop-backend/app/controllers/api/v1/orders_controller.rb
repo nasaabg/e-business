@@ -7,7 +7,7 @@ module Api
       def index
         @orders = current_user.orders
 
-        render json: @orders
+        render json: @orders.as_json(include: :products)
       end
 
       # GET /orders/1
