@@ -11,7 +11,7 @@ class Header extends Component {
   }
 
   render() {
-    const { info } = this.props;
+    const {info, onPageChange} = this.props;
 
     return (
       <AppBar title='Best Shop'>
@@ -26,6 +26,18 @@ class Header extends Component {
               </span>
             </span>
           )}
+          <Link
+            href='#'
+            label='My Orders'
+            className='Header-link'
+            onClick={() => onPageChange('orders')}
+          />
+          <Link
+            href='#'
+            label='Shop'
+            className='Header-link'
+            onClick={() => onPageChange('shop')}
+          />
           <Link
             href='#'
             active

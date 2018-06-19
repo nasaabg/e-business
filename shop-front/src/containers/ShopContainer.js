@@ -89,6 +89,7 @@ class ShopContainer extends Component {
             <div className="col-lg-3">
               <h3>Shopping Cart</h3>
               <Cart
+                token={this.props.token}
                 cartItems={cartItems}
                 onCartClear={this.onCartClear.bind(this)}
                 onProductAdd={this.onProductAdd.bind(this)}

@@ -6,11 +6,20 @@ import _ from 'lodash';
 
 class Cart extends React.Component {
   handleOrder() {
-    const {cartItems, onCartClear} = this.props
-    axios.post("http://localhost:3001/api/v1/orders.json", {
-      products: _.map(cartItems, (item) => ({id: item.product.id, quantity: item.quantity}))
+    const {cartItems, onCartClear, token} = this.props
+    axios.post(`http://localhost:3001/api/v1/orders?token=${token}`, {
+      order: {
+        products: _.map(cartItems, (item) => (
+          {
+            product_id: item.product.id,
+            quantity: item.quantity
+          }
+        ))
+      }
     })
       .then(response => {
+        alert("Order completed!")
+        onCartClear()
       })
       .catch(error => {
         console.log(error)

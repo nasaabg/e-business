@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../components/Header'
 import ShopContainer from './ShopContainer'
+import OrdersContainer from './OrdersContainer'
 import * as utils from '../utils';
 
 class Main extends Component {
@@ -9,11 +10,18 @@ class Main extends Component {
 
     this.state = {
       info: null,
+      page: 'shop',
     };
   }
 
   componentDidMount() {
     this.fetchUserDetails();
+  }
+
+  handlePageChange(page) {
+   this.setState({
+     page: page,
+   })
   }
 
   fetchUserDetails() {
@@ -24,15 +32,17 @@ class Main extends Component {
   }
 
   render() {
-    const {info} = this.state
+    const {info, page} = this.state
+    const {token} = this.props
     return (
       <div>
         <Header
           info={info}
+          onPageChange={this.handlePageChange.bind(this)}
         />
-      <ShopContainer />
-      <footer class="container-fluid">
-      <nav class="navbar fixed-bottom">
+        {page === 'shop' ? <ShopContainer token={token}/> : <OrdersContainer token={token} />}
+      <footer className="container-fluid">
+      <nav className="navbar fixed-bottom">
       Copyright &copy; Janek Kurzydlo 2018
     </nav>
   </footer>
