@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
 
 class OrdersContainer extends React.Component {
   constructor (props) {
@@ -27,10 +28,26 @@ class OrdersContainer extends React.Component {
   render () {
 
     return (
-      <div className="row">
-        {this.state.orders.map(order => {
-          return (<div key={order.id}>{order.id}</div>)
-        })}
+      <div className="row my-orders" style={{padding: 100, display: "inline"}}>
+        <h1>My Orders</h1>
+        <ul style={{"list-style": "none"}}>
+          {
+            this.state.orders.map((order) =>
+              <li
+                key={order.id}
+              >
+                <p>Order ID: {order.id} Products:</p>
+                <ul style={{"list-style": "none"}}>
+                  {
+                    order.products.map((product) =>
+                    <li>{product.name}</li>)
+                  }
+                </ul>
+              <hr />
+              </li>
+            )
+          }
+        </ul>
       </div>
     )
   }
